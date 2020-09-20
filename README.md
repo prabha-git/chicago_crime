@@ -9,6 +9,8 @@ Data in the portal does not have any history, latest info for each case is updat
 I created a python script to pull the data using sodapy api and stores the data in Google Big Query database. if there is an update to an existing case record it will inactivate the record in teh GBQ and inserts the latest record.
 
 ![](https://si.wsj.net/public/resources/images/BN-XJ808_CARJAC_P_20180208130657.jpg)
+
+
 *Photo from wsj.com*
 
 I dockerize the script and publish to google container registry and deployed in google cloud run. Used Google scheduler to run the python script every day at 9 PM. 
