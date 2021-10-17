@@ -14,3 +14,7 @@ I created a python script to pull the data using sodapy api and stores the data 
 *Photo from wsj.com*
 
 I dockerize the script and publish to google container registry and deployed in google cloud run. Used Google scheduler to run the python script every day at 9 PM. 
+
+
+Below is the architecture cloud diagram.
+![](https://github.com/prabha-git/chicago_crime/blob/master/gbq_data_history/Chicago_crime_data_history.png)
