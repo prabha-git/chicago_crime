@@ -6,7 +6,11 @@ import os
 import json
 import argparse
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/Users/prabha/GitHub/chicago_crime/beam/chicago-crime-batch-processing.json"
+# For My MacBook
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/Users/prabha/GitHub/chicago_crime/beam/chicago-crime-batch-processing.json"
+
+# For my windows Laptop
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']=r"C:\Users\arivalagan.prabhakar\Documents\Github\chicago_crime\beam\data_pipeline\batch\chicago-crime-batch-processing.json"
 
 table_schema= 'id:numeric,case_number:string,date:datetime,block:string,iucr:string,primary_type:string,description:string,location_description:string,arrest:boolean,domestic:boolean,beat:string,district:string,ward:string,community_area:string,fbi_code:string,x_coordinate:numeric,y_coordinate:numeric,year:numeric,updated_on:datetime,latitude:float,longitude:float,location:string'
 
@@ -57,26 +61,19 @@ def data_type_conversion(row):
     
     
 
-p1 = beam.Pipeline(options=options)
-
-cleaned_data = (
-    p1
-    | beam.Create(['data.cityofchicago.org'])
-    | "Call API" >> beam.ParDo(fetch_data())
-   # | "Get first element" >> beam.FlatMap(get_first_element)
-)
-
-
-
-
-write_to_bq = (
-     cleaned_data
-    | "Clean Data to Json" >> beam.Map(data_type_conversion)
-    #| beam.io.WriteToText("output")
-    | beam.io.WriteToBigQuery('chicago-crime3:data_lake.crime_data',schema=table_schema,
-                              create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-                              write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
-                              custom_gcs_temp_location='gs://chicago-crime3-batch/tmp')
-)
-
-p1.run()
+with beam.Pipeline(options=options) as p:
+    data    =   (p 
+                | 'URL ' >> beam.Create(['data.cityofchicago.org'])
+                | 'Call API' >> beam.ParDo(fetch_data())
+    )
+    
+    write_to_gbq = (
+        data 
+        | "Data Type Conversion" >> beam.Map(data_type_conversion)
+        | "Write to GBQ Table" >> beam.io.WriteToBigQuery('chicago-crime3:data_lake.crime_data',
+                                                          schema=table_schema,
+                                                          create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+                                                          write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+                                                          custom_gcs_temp_location='gs://chicago-crime3-batch/tmp'
+                                                          )
+    )
