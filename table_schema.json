@@ -1,0 +1,184 @@
+[
+    {
+        "name":"id",
+        "type":"NUMERIC",
+        "mode":"REQUIRED"
+    },
+
+    {
+        "name":"case_number",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"date",
+        "type":"DATETIME",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"block",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+
+    {
+        "name":"iucr",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+
+    {
+        "name":"primary_type",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"description",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"location_description",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"arrest",
+        "type":"BOOL",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"domestic",
+        "type":"BOOL",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"beat",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"district",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+
+    {
+        "name":"ward",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"community_area",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"fbi_code",
+        "type":"STRING",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"x_coordinate",
+        "type":"NUMERIC",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"y_coordinate",
+        "type":"NUMERIC",
+        "mode":"NULLABLE"
+    },
+
+
+    {
+        "name":"year",
+        "type":"NUMERIC",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"updated_on",
+        "type":"DATETIME",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"latitude",
+        "type":"FLOAT",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"longitude",
+        "type":"FLOAT",
+        "mode":"NULLABLE"
+    },
+
+    {
+        "name":"location",
+        "type":"STRUCT",
+        "mode":"NULLABLE",
+        "fields":[
+            {
+                "name":"latitude",
+                "type":"FLOAT",
+                "mode":"NULLABLE"
+            },
+
+            {
+                "name":"longitude",
+                "type":"FLOAT",
+                "mode":"NULLABLE"
+            },
+
+            {
+                "name":"human_address",
+                "type":"STRUCT",
+                "mode":"NULLABLE",
+                "fields":[
+                    {
+                        "name":"address",
+                        "type":"STRING",
+                        "mode":"NULLABLE"
+                    },
+
+                    {
+                        "name":"city",
+                        "type":"STRING",
+                        "mode":"NULLABLE"
+                    },
+
+                    {
+                        "name":"state",
+                        "type":"STRING",
+                        "mode":"NULLABLE"
+                    },
+
+
+                    {
+                        "name":"zip",
+                        "type":"STRING",
+                        "mode":"NULLABLE"
+                    }
+                ]
+            }
+
+        ]
+    }
+
+]
