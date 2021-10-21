@@ -6,24 +6,32 @@ import os
 import json
 import argparse
 
+import logging
+
 # For My MacBook
-#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/Users/prabha/GitHub/chicago_crime/beam/chicago-crime-batch-processing.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/Users/prabha/GitHub/chicago_crime/beam/chicago-crime-batch-processing.json"
 
 # For my windows Laptop
-os.environ['GOOGLE_APPLICATION_CREDENTIALS']=r"C:\Users\arivalagan.prabhakar\Documents\Github\chicago_crime\beam\data_pipeline\batch\chicago-crime-batch-processing.json"
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS']=r"C:\Users\arivalagan.prabhakar\Documents\Github\chicago_crime\beam\data_pipeline\batch\chicago-crime-batch-processing.json"
 
 table_schema= 'id:numeric,case_number:string,date:datetime,block:string,iucr:string,primary_type:string,description:string,location_description:string,arrest:boolean,domestic:boolean,beat:string,district:string,ward:string,community_area:string,fbi_code:string,x_coordinate:numeric,y_coordinate:numeric,year:numeric,updated_on:datetime,latitude:float,longitude:float,location:string'
 
-parser = argparse.ArgumentParser()
-path_args,pipeline_args = parser.parse_known_args()
-options = PipelineOptions(pipeline_args)
+# parser = argparse.ArgumentParser()
+# path_args,pipeline_args = parser.parse_known_args()
 
+
+
+class chicago_crime_options(PipelineOptions):
+    @classmethod
+    def _add_argparse_args(cls,parser):
+        parser.add_argument('--bigquery_table',type=str,help="BQ table to store the results")
 
 class fetch_data(beam.DoFn):
     def process(self,url):
         from datetime import datetime,timedelta
         from sodapy import Socrata
-        updated_last_n_days = 1
+        import logging
+        updated_last_n_days = 3
         client = Socrata(url, app_token="Ttz4HIh52J3g53HKTYKMNxu4M")
 
         # Get all the updates in the last week.
@@ -32,6 +40,7 @@ class fetch_data(beam.DoFn):
         crimes = list(client.get_all("ijzp-q8t2",content_type='json',where = updated_on_filter,))
         
         crimes = crimes[1:] # remove the header row
+        logging.info("Number of records ",len(crimes))
         
         return crimes
 
@@ -59,9 +68,13 @@ def data_type_conversion(row):
 
     return row
     
-    
+
+options = PipelineOptions()
 
 with beam.Pipeline(options=options) as p:
+    
+    input_options = options.view_as(chicago_crime_options)
+    
     data    =   (p 
                 | 'URL ' >> beam.Create(['data.cityofchicago.org'])
                 | 'Call API' >> beam.ParDo(fetch_data())
@@ -70,7 +83,7 @@ with beam.Pipeline(options=options) as p:
     write_to_gbq = (
         data 
         | "Data Type Conversion" >> beam.Map(data_type_conversion)
-        | "Write to GBQ Table" >> beam.io.WriteToBigQuery('chicago-crime3:data_lake.crime_data',
+        | "Write to GBQ Table" >> beam.io.WriteToBigQuery(input_options.bigquery_table,
                                                           schema=table_schema,
                                                           create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
                                                           write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
