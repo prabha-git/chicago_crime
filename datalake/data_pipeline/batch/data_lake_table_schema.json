@@ -51,13 +51,13 @@
 
     {
         "name":"arrest",
-        "type":"BOOL",
+        "type":"BOOLEAN",
         "mode":"NULLABLE"
     },
 
     {
         "name":"domestic",
-        "type":"BOOL",
+        "type":"BOOLEAN",
         "mode":"NULLABLE"
     },
 
@@ -131,7 +131,7 @@
 
     {
         "name":"location",
-        "type":"STRUCT",
+        "type":"RECORD",
         "mode":"NULLABLE",
         "fields":[
             {
@@ -148,7 +148,7 @@
 
             {
                 "name":"human_address",
-                "type":"STRUCT",
+                "type":"RECORD",
                 "mode":"NULLABLE",
                 "fields":[
                     {

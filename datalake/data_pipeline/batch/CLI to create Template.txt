@@ -1,0 +1,4 @@
+python pipeline.py --runner DataflowRunner --region us-central1 \
+--project chicago-crime3 --temp_location gs://chicago-crime3-batch/tmp \
+--template_location gs://chicago-crime3-batch/template/chicago_crime_pipeline \
+--bigquery_table chicago-crime3:data_lake.crime_data --requirements_file requirements.txt --save_main_session
